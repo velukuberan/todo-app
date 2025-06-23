@@ -1,0 +1,15 @@
+[tool.ruff]
+line-length = 80
+target-version = "py37"
+select = ["E", "F", "B", "I", "C90"]
+exclude = ["migrations"]
+fix = true
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true
+
+[tool.mypy]
+python_version = 3.7
+ignore_missing_imports = true
+strict = true
