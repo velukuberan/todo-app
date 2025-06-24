@@ -1,12 +1,24 @@
 from fastapi import FastAPI
-from app.models.item import Item
+from scalar_fastapi import get_scalar_api_reference
 
 app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "Todo App Backend (Python 3.7) is running!"}
+    return {
+        "message": "Todo App Backend (Python 3.7) is running!"
+    }
 
-@app.get("/items/{item_id}")
-def read_items(item_id: int):
-    return Item(id=item_id, name="Lord of the Rings", price=2.5)
+@app.get("/shipment")
+def get_shipment():
+    return {
+        "content": "Wooden Table",
+        "status": "in transit"
+    }
+
+@app.get("/scalar", include_in_schema=False)
+def get_scalar_docs():
+    return get_scalar_api_reference(
+        openapi_url=app.openapi_url,
+        title="Scalar API"
+    )
