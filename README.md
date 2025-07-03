@@ -1,4 +1,4 @@
 # Todo App using FastAPI
 
-A simple todo app using FastAPI, Postgres, React 
+A simple todo app using FastAPI, Postgres, Redis, React 
 
