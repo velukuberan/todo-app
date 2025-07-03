@@ -2,6 +2,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, status
 from scalar_fastapi import get_scalar_api_reference
 from app.db import shipments
+from app.schema import Shipment
 
 app = FastAPI()
 
@@ -11,7 +12,7 @@ def read_root():
         "message": "Todo App Backend (Python 3.7) is running!"
     }
 
-@app.get("/scalar", include_in_schema=False)
+@app.get("/documentations", include_in_schema=False)
 def get_scalar_docs():
     return get_scalar_api_reference(
         openapi_url=app.openapi_url,
@@ -19,72 +20,34 @@ def get_scalar_docs():
     )
 
 @app.get("/shipments")
-def get_shipment(id: int | None = None):
-    if not id:
-        id = max(shipments.keys())
+def get_shipments() -> dict[int, Any]:
+    return shipments
+
+@app.get("/shipments/{id}")
+def get_shipments(id: int) -> Shipment:
 
     if id not in shipments:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Shipment id doesn't exists."
+            detail=f"Shipment #id:{id} doesn't exists"
         )
 
-    return shipments[id]
+    return Shipment(
+        **shipments[id]
+    )
 
 @app.post("/shipments")
-def new_shipment(data: dict[str, Any]) -> dict[str, int]:
-
-    content = data['content']
-    weight = data['weight']
-
-    if weight > 25:
-        raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail="Maximum weight limit is 25 kgs"
-        )
-
+def create_shipments(shipment: Shipment) -> Shipment:
     new_id = max(shipments.keys()) + 1
 
     shipments[new_id] = {
-        "content": content,
-        "weight": weight,
-        "status": "placed"
+        "content": shipment.content,
+        "weight": shipment.weight,
+        "destination": shipment.destination,
+        "status": shipment.status
     }
-    
-    return {"id": new_id}
 
-@app.put("/shipments/{id}")
-def update_shipment(id: int, data: dict[str, Any]) -> dict[str, Any]:  # Fixed return type
-    
-    if id not in shipments:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Shipment id doesn't exist."
-        )
-     
-    if 'weight' in data and data['weight'] > 25:
-        raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail="Maximum weight limit is 25 kgs"
-        )
-    
-    # Update existing shipment instead of replacing
-    shipment = shipments[id]
-    shipment.update(data)
-    shipments[id] = shipment
+    return Shipment(
+        **shipments[new_id]
+    )
 
-    return shipments[id]
-
-@app.delete("/shipments/{id}")
-def delete_shipments(id: int) -> dict[str, str]:
-    
-    if id not in shipments:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Shipment id doesn't exist."
-        )
-     
-    shipments.pop(id)
-    return {
-        "details": f"Shipment with id #{id} is deleted!"
-    }
