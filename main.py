@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from scalar_fastapi import get_scalar_api_reference
 from app.user.route import router as user_router 
 from app.book.route import router as book_router
-from app.shipping.route import router as shipping_router 
+from app.shipment.route import router as shipping_router 
 
 app = FastAPI()
 app.include_router(user_router, prefix="/api/v1")
