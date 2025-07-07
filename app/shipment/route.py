@@ -1,16 +1,16 @@
-from typing import Any
+from typing import Any, List
 from fastapi import APIRouter
 from app.db import shipments
 from .schema import Shipment
 
 router = APIRouter(prefix="/shipments", tags=["shipments"])
 
-@router.get("/")
-def get_shipments() -> dict[int, Any]:
-    return shipments
+@router.get("/", response_model=List[Shipment])
+def get_shipments(): 
+    return [Shipment(**data) for data in shipments.values()] 
 
-@router.get("/{id}")
-def get_shipments(id: int) -> Shipment:
+@router.get("/{id}", response_model=Shipment)
+def get_shipments(id: int):
 
     if id not in shipments:
         raise HTTPException(
@@ -22,8 +22,8 @@ def get_shipments(id: int) -> Shipment:
         **shipments[id]
     )
 
-@router.post("/")
-def create_shipments(shipment: Shipment) -> Shipment:
+@router.post("/", response_model=Shipment)
+def create_shipments(shipment: Shipment):
     new_id = max(shipments.keys()) + 1
 
     shipments[new_id] = {
