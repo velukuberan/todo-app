@@ -20,8 +20,11 @@ def get_books(id: int):
             detail=f"Book #id:{id} doesn't exists"
         )
 
-    return Book(
+    book = Book(
         id=id,
         **books[id]
     )
+    
+    book.add_genre('Thriller')
 
+    return book
