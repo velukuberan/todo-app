@@ -7,12 +7,21 @@ build:
 up:
 	docker-compose up
 
+up-d:
+	docker-compose up -d
+
+down:
+	docker-compose down
+
 # Utilities
 pyv:
 	docker-compose exec web python --version
 
 bash:
 	docker-compose exec web bash
+
+frontend-bash:
+	docker-compose exec frontend sh
 
 db:
 	docker-compose exec db bash

@@ -1,10 +1,32 @@
 from typing import Any
 from fastapi import FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from scalar_fastapi import get_scalar_api_reference
 from app.db import shipments
 from app.schema import Shipment
+import os
 
 app = FastAPI()
+
+# Configure CORS
+origins = [
+    "http://localhost:3000",
+    "http://frontend:3000",
+    "http://127.0.0.1:3000",
+]
+
+# Allow CORS_ORIGINS environment variable to override
+cors_origins = os.getenv("CORS_ORIGINS")
+if cors_origins:
+    origins.extend(cors_origins.split(","))
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
@@ -20,11 +42,11 @@ def get_scalar_docs():
     )
 
 @app.get("/shipments")
-def get_shipments() -> dict[int, Any]:
+def get_all_shipments() -> "dict[int, Any]":
     return shipments
 
 @app.get("/shipments/{id}")
-def get_shipments(id: int) -> Shipment:
+def get_shipment_by_id(id: int) -> Shipment:
 
     if id not in shipments:
         raise HTTPException(
