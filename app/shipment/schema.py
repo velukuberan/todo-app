@@ -19,3 +19,6 @@ class Shipment(BaseModel):
         default_factory=random_destination, ge=1, le=1000000
     )
     status: ShipmentStatus
+
+class ShipmentPatch(BaseModel):
+    status: ShipmentStatus
