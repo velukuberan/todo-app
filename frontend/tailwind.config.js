@@ -1,10 +1,8 @@
 const config = {
   content: [
-    "./lib/**/*.{js,ts,jsx,tsx}",
-    "./routes/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-    "./index.html",
-    "./index.tsx",
+    "./src/lib/**/*.{js,ts,jsx,tsx}",
+    "./src/routes/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},

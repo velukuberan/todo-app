@@ -12,7 +12,11 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'), // Absolute path to the /src directory
+      '@': path.resolve(__dirname, './src'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@lib': path.resolve(__dirname, './src/lib'),
+      '@assets': path.resolve(__dirname, './src/assets'),
+      '@ui': path.resolve(__dirname, './src/components/ui'),
     },
   },
 })
